@@ -5,7 +5,14 @@ const jobsRoutes = express.Router();
 // get all jobs
 jobsRoutes.get("/jobs", async (req, res) => {
   try {
-    const jobs = await JobsCollections.find().lean();
+    const email = req.query.email;
+    let query = {};
+
+    if (email) {
+      query = { 'buyer_info.buyer_email': email };
+    }
+
+    const jobs = await JobsCollections.find(query).lean();
     res.status(200).json({
       success: true,
       jobs
@@ -14,7 +21,7 @@ jobsRoutes.get("/jobs", async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: err
+      message: err.message
     })
   }
 })
@@ -33,7 +40,7 @@ jobsRoutes.get("/job/:id", async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: err
+      message: err.message
     })
   }
 })
@@ -52,7 +59,59 @@ jobsRoutes.post("/job", async (req, res) => {
     console.log(err);
     res.status(500).json({
       success: false,
-      message: err
+      message: err.message
+    })
+  }
+});
+
+// update a job data
+jobsRoutes.put("/job/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const updatedJobData = req.body;
+
+    const result = await JobsCollections.findByIdAndUpdate(
+      _id,
+      { $set: { ...updatedJobData } },
+      { new: true, runValidators: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found!",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Job Data updated successfully!",
+      result
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message
+    })
+  }
+})
+
+// delete a job data
+jobsRoutes.delete("/job/:id", async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const result = await JobsCollections.findByIdAndDelete(_id);
+    res.status(200).json({
+      success: true,
+      message: "Job Data deleted successfully!",
+      result
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err.message
     })
   }
 })
