@@ -1,9 +1,11 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+const MONGO_URI = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.6cfx5an.mongodb.net/solo-sphere-DB`;
+
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(MONGO_URI);
     console.log(`DB is connectd successfully!`);
   } catch (err) {
     console.log(`Error connecting to DB: ${err}`);

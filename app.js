@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jobsRoutes = require("./routes/jobs.routes");
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).send("SoloSphere is cooking!");
 });
+
+// jobs routes
+app.use("/", jobsRoutes);
 
 // 404 route 
 app.use((req, res, next) => {
