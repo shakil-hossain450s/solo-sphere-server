@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const jobsRoutes = require("./routes/jobs.routes");
+const bidsRoutes = require("./routes/bids.routes");
 
 const app = express();
 
@@ -21,6 +22,9 @@ app.get("/", (req, res) => {
 
 // jobs routes
 app.use("/", jobsRoutes);
+
+// bids routes
+app.use("/", bidsRoutes);
 
 // 404 route 
 app.use((req, res, next) => {

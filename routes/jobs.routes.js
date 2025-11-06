@@ -1,5 +1,5 @@
 const express = require("express");
-const JobsCollections = require("../models/jobs.model");
+const JobsCollections = require("../models/job.model");
 const jobsRoutes = express.Router();
 
 // get all jobs
