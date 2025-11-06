@@ -1,5 +1,5 @@
 const express = require("express");
-const { getJobs, getSingleJob, createSingleJob, updateJob, deleteJob } = require("../controllers/jobs.controllers");
+const { getJobs, getSingleJob, createSingleJob, updateJob, deleteJob } = require("../controllers/jobs.controller");
 const jobsRoutes = express.Router();
 
 // get all jobs
