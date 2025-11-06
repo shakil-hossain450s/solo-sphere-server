@@ -38,4 +38,23 @@ jobsRoutes.get("/job/:id", async (req, res) => {
   }
 })
 
+// create a job data
+jobsRoutes.post("/job", async (req, res) => {
+  try {
+    const jobData = req.body;
+    console.log(jobData);
+    const result = await JobsCollections.create(jobData);
+    res.status(201).json({
+      success: true,
+      result
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      success: false,
+      message: err
+    })
+  }
+})
+
 module.exports = jobsRoutes;

@@ -7,8 +7,7 @@ const JobsSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
-    enum: ["Web Development", "Graphics Desing", "Digital Marketing"]
+    required: true
   },
   deadline: {
     type: Date,
@@ -28,16 +27,23 @@ const JobsSchema = new mongoose.Schema({
     required: true,
     min: 0
   },
-  buyer_email: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  buyer_name: {
-    type: String,
-    required: true,
+  buyer_info: {
+    buyer_email: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    buyer_name: {
+      type: String,
+      required: true,
+    },
+    buyer_photo: {
+      type: String,
+      required: true
+    }
   }
-});
+
+}, { timestamps: true });
 
 const JobsCollections = mongoose.model("Jobs", JobsSchema);
 module.exports = JobsCollections;
