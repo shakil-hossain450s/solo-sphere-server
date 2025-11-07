@@ -70,7 +70,7 @@ const updateJob = async (req, res) => {
 
     const result = await JobsCollections.findByIdAndUpdate(
       _id,
-      { $set: { ...updatedJobData } },
+      { $set: updatedJobData },
       { new: true, runValidators: true }
     );
 
