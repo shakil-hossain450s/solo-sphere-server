@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const jobsRoutes = require("./routes/jobs.routes");
 const bidsRoutes = require("./routes/bids.routes");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -14,11 +16,33 @@ const corsOptions = {
 // middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 // default route
 app.get("/", (req, res) => {
   res.status(200).send("SoloSphere is cooking!");
 });
+
+app.post("/jwt", (req, res) => {
+  const user = req.body;
+  console.log(user);
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "10h" });
+  res.cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  });
+  res.send({ success: true });
+});
+
+app.get("/logout", (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production' ? true : false,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  });
+  res.send({ success: true })
+})
 
 // jobs routes
 app.use("/", jobsRoutes);
