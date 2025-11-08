@@ -1,14 +1,12 @@
 const express = require("express");
-const { getAllJobs, getSingleJob, createSingleJob, updateJob, deleteJob, getJobsPostedBySpecificUser } = require("../controllers/jobs.controller");
-const verifyToken = require("../middleware/verifyToken");
-const JobsCollections = require("../models/job.model");
+const { getJobs, getSingleJob, createSingleJob, updateJob, deleteJob, getJobsPostBySpecificUser } = require("../controllers/jobs.controller");
+const verifyJwtToken = require("../middleware/verifyJwtToken");
 const jobsRoutes = express.Router();
 
 // get all jobs
-jobsRoutes.get("/jobs", getAllJobs);
+jobsRoutes.get("/jobs", getJobs);
 
-// get all jobs posted by a specific user
-jobsRoutes.get("/jobs/:email", verifyToken, getJobsPostedBySpecificUser);
+jobsRoutes.get("/my-posted-jobs/:email", verifyJwtToken, getJobsPostBySpecificUser);
 
 // get a single job
 jobsRoutes.get("/job/:id", getSingleJob);

@@ -1,7 +1,7 @@
 const JobsCollections = require("../models/job.model");
 
 // get all jobs
-const getAllJobs = async (req, res) => {
+const getJobs = async (req, res) => {
   try {
     const jobs = await JobsCollections.find().lean();
     res.status(200).json({
@@ -10,35 +10,37 @@ const getAllJobs = async (req, res) => {
     })
   } catch (err) {
     console.log(err);
+    res.status(500).json({
+      message: err.message
+    })
   }
 }
 
-// get all jobs posted by a specific user
-const getJobsPostedBySpecificUser =  async (req, res) => {
+const getJobsPostBySpecificUser = async (req, res) => {
   try {
-
     const user = req.user;
-    console.log(user);
-
     const email = req.params.email;
 
-    if(email !== user.email){
-      return res.status(403).send({message: "Forbidden access"})
+    console.log('user', user);
+    console.log(email);
+
+    if (email !== user.email) {
+      return res.status(403).send({ message: 'forbidden access' });
     }
 
+    const query = { 'buyer_info.buyer_email': email };
 
-    // prevent access to others' data
-
-    const jobs = await JobsCollections.find({ 'buyer_info.buyer_email': email }).lean();
-
+    const jobs = await JobsCollections.find(query).lean();
     res.status(200).json({
       success: true,
       jobs
-    });
+    })
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: err.message });
+    console.log(err);
+    res.status(500).json({
+      message: err.message
+    })
   }
 }
 
@@ -132,4 +134,4 @@ const deleteJob = async (req, res) => {
   }
 }
 
-module.exports = { getAllJobs, getJobsPostedBySpecificUser, getSingleJob, createSingleJob, updateJob, deleteJob };
+module.exports = { getJobs, getJobsPostBySpecificUser, getSingleJob, createSingleJob, updateJob, deleteJob };
