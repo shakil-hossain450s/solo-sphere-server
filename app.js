@@ -15,11 +15,11 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://solosphere8699.web.app"
+    "https://solosphere8699.web.app",
+    "https://solosphere8699.firebaseapp.com"
   ],
   credentials: true,
-  optionsSuccessStatus: 200
-}
+};
 
 // middleware
 app.use(cors(corsOptions));
@@ -34,7 +34,7 @@ app.post("/jwt", async (req, res) => {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production' ? true : false,
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : "lax"
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : "lax"
   }).send({ success: true });
 });
 
@@ -42,7 +42,7 @@ app.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production' ? true : false,
-    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : "lax"
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : "lax"
   }).send({ success: true });
 });
 
