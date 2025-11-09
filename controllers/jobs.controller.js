@@ -3,28 +3,56 @@ const JobsCollections = require("../models/job.model");
 // get all jobs
 const getJobs = async (req, res) => {
   try {
-    const jobs = await JobsCollections.find().lean();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const skip = (page - 1) * limit;
+    const filter = req.query.filter;
+    const sortField = req.query.sortField || "createdAt";
+    const sortOrder = req.query.sort === 'asc' ? 1 : -1;
+    const search = req.query.search || "";
+
+    let query = {};
+    if (filter) {
+      query = { category: filter }
+    }
+
+    if (search) {
+      query.job_title = { $regex: search, $options: "i" }
+    }
+
+    
+    const jobs = await JobsCollections.find(query)
+      .sort({ [sortField]: sortOrder })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+    const total = await JobsCollections.countDocuments(query);
+
     res.status(200).json({
       success: true,
-      jobs
-    })
+      jobs,
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      totalItems: total,
+    });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).json({
-      message: err.message
-    })
+      message: err.message,
+    });
   }
-}
+};
 
+// get jobs post data by specific user
 const getJobsPostBySpecificUser = async (req, res) => {
   try {
-    const user = req.user;
+    const { email: tokenEmail } = req.user;
     const email = req.params.email;
 
-    console.log('user', user);
+    console.log('tokenEmail', tokenEmail);
     console.log(email);
 
-    if (email !== user.email) {
+    if (email !== tokenEmail) {
       return res.status(403).send({ message: 'forbidden access' });
     }
 
@@ -34,7 +62,7 @@ const getJobsPostBySpecificUser = async (req, res) => {
     res.status(200).json({
       success: true,
       jobs
-    })
+    });
 
   } catch (err) {
     console.log(err);

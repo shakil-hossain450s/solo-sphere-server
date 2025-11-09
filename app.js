@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const jobsRoutes = require("./routes/jobs.routes");
@@ -10,7 +11,7 @@ const app = express();
 const corsOptions = {
   origin: ["http://localhost:5173", "http://localhost:5174",],
   credentials: true,
-  optionSuccessStatus: 200
+  optionsSuccessStatus: 200
 }
 
 // middleware

@@ -6,6 +6,7 @@ const jobsRoutes = express.Router();
 // get all jobs
 jobsRoutes.get("/jobs", getJobs);
 
+// get jobs post data by specific user
 jobsRoutes.get("/my-posted-jobs/:email", verifyJwtToken, getJobsPostBySpecificUser);
 
 // get a single job
