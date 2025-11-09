@@ -5,8 +5,11 @@ const jobsRoutes = require("./routes/jobs.routes");
 const bidsRoutes = require("./routes/bids.routes");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const connectDB = require("./config/database.config");
 
 const app = express();
+
+connectDB();
 
 const corsOptions = {
   origin: [
